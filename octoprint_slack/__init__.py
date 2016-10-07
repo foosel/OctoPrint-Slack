@@ -55,6 +55,21 @@ class SlackPlugin(octoprint.plugin.SettingsPlugin,
                     ),
                 )
 
+    def on_settings_load(self):
+        data = octoprint.plugin.SettingsPlugin.on_settings_load(self)
+
+        # only return our restricted settings to admin users - this is only needed for OctoPrint <= 1.2.16
+        restricted = ("webhook_url",)
+        for r in restricted:
+            if r in data and (current_user is None or current_user.is_anonymous() or not current_user.is_admin()):
+                data[r] = None
+
+        return data
+
+    def get_settings_restricted_paths(self):
+        # only used in OctoPrint versions > 1.2.16
+        return dict(admin=[["webhook_url"],])
+
     def get_settings_version(self):
         return 3
 
