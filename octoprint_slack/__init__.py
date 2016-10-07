@@ -6,6 +6,8 @@ import os
 import json
 import requests
 
+from flask.ext.login import current_user
+
 class SlackPlugin(octoprint.plugin.SettingsPlugin,
                   octoprint.plugin.TemplatePlugin,
                   octoprint.plugin.EventHandlerPlugin):
